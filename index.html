@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sarafyna — Boutique en ligne</title>
+  <meta name="description" content="Sarafyna : mode, beauté et accessoires. Livraison rapide." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <a href="#" class="logo" id="logo">Sarafyna</a>
+      <div class="search">
+        <input type="search" id="search" placeholder="Rechercher un produit…" aria-label="Rechercher" />
+      </div>
+      <button class="cart-btn" id="openCart" aria-label="Ouvrir le panier">
+        🛍️ <span class="cart-btn__label">Panier</span>
+        <span class="badge" id="cartCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero__inner">
+        <div>
+          <p class="hero__eyebrow" id="tagline"></p>
+          <h1>Révélez votre style avec <span>Sarafyna</span></h1>
+          <p class="hero__text">Des pièces choisies avec soin, des matières naturelles et un savoir-faire artisanal. Livraison offerte dès <strong id="freeShip"></strong>.</p>
+          <a href="#catalogue" class="btn btn--primary">Découvrir la collection</a>
+        </div>
+        <div class="hero__art" aria-hidden="true">👗👜💍🌸</div>
+      </div>
+    </section>
+
+    <section class="perks container">
+      <div>🚚 <strong>Livraison rapide</strong><span>48 à 72 h</span></div>
+      <div>🔒 <strong>Paiement sécurisé</strong><span>À la commande ou à la livraison</span></div>
+      <div>↩️ <strong>Retours gratuits</strong><span>Sous 14 jours</span></div>
+      <div>💬 <strong>Service client</strong><span>7 j/7</span></div>
+    </section>
+
+    <section class="container" id="catalogue">
+      <div class="toolbar">
+        <div class="filters" id="filters" role="tablist"></div>
+        <select id="sort" aria-label="Trier">
+          <option value="default">Trier : Pertinence</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+          <option value="rating">Mieux notés</option>
+          <option value="name">Nom (A-Z)</option>
+        </select>
+      </div>
+      <p class="results" id="results"></p>
+      <div class="grid" id="grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <div class="logo">Sarafyna</div>
+        <p>Mode, beauté & accessoires.</p>
+      </div>
+      <div>
+        <strong>Contact</strong>
+        <p><a id="footerEmail" href="#"></a></p>
+      </div>
+      <div>
+        <strong>Informations</strong>
+        <p>Livraison · Retours · CGV · Mentions légales</p>
+      </div>
+    </div>
+    <p class="footer__copy">© <span id="year"></span> Sarafyna. Tous droits réservés.</p>
+  </footer>
+
+  <!-- Fiche produit -->
+  <div class="modal" id="productModal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+      <button class="icon-btn modal__close" data-close aria-label="Fermer">✕</button>
+      <div class="pm" id="pmContent"></div>
+    </div>
+  </div>
+
+  <!-- Panier -->
+  <div class="drawer" id="cartDrawer" hidden>
+    <div class="drawer__backdrop" data-close></div>
+    <aside class="drawer__panel" role="dialog" aria-modal="true" aria-label="Panier">
+      <div class="drawer__head">
+        <h2>Mon panier</h2>
+        <button class="icon-btn" data-close aria-label="Fermer">✕</button>
+      </div>
+      <div class="drawer__body" id="cartItems"></div>
+      <div class="drawer__foot" id="cartFoot"></div>
+    </aside>
+  </div>
+
+  <!-- Commande -->
+  <div class="modal" id="checkoutModal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__panel modal__panel--narrow" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+      <button class="icon-btn modal__close" data-close aria-label="Fermer">✕</button>
+      <div id="checkoutContent"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
