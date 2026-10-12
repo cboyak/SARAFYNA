@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sarafyna — Boutique en ligne</title>
-  <meta name="description" content="Sarafyna : mode, beauté et accessoires. Livraison rapide." />
+  <meta name="description" content="Sarafyna Cosmétique : soins visage, corps, cheveux, maquillage et parfums. Livraison rapide." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -26,18 +26,18 @@
       <div class="container hero__inner">
         <div>
           <p class="hero__eyebrow" id="tagline"></p>
-          <h1>Révélez votre style avec <span>Sarafyna</span></h1>
-          <p class="hero__text">Des pièces choisies avec soin, des matières naturelles et un savoir-faire artisanal. Livraison offerte dès <strong id="freeShip"></strong>.</p>
+          <h1>Révélez votre beauté naturelle avec <span>Sarafyna</span></h1>
+          <p class="hero__text">Des soins sélectionnés avec exigence, des ingrédients naturels et des résultats visibles. Livraison offerte dès <strong id="freeShip"></strong>.</p>
           <a href="#catalogue" class="btn btn--primary">Découvrir la collection</a>
         </div>
-        <div class="hero__art" aria-hidden="true">👗👜💍🌸</div>
+        <div class="hero__art" aria-hidden="true">🧴💄🌸✨</div>
       </div>
     </section>
 
     <section class="perks container">
       <div>🚚 <strong>Livraison rapide</strong><span>48 à 72 h</span></div>
       <div>🔒 <strong>Paiement sécurisé</strong><span>À la commande ou à la livraison</span></div>
-      <div>↩️ <strong>Retours gratuits</strong><span>Sous 14 jours</span></div>
+      <div>🌿 <strong>Produits authentiques</strong><span>Ingrédients de qualité</span></div>
       <div>💬 <strong>Service client</strong><span>7 j/7</span></div>
     </section>
 
@@ -61,7 +61,7 @@
     <div class="container footer__inner">
       <div>
         <div class="logo">Sarafyna</div>
-        <p>Mode, beauté & accessoires.</p>
+        <p>Votre boutique de cosmétiques.</p>
       </div>
       <div>
         <strong>Contact</strong>
@@ -105,6 +105,13 @@
       <div id="checkoutContent"></div>
     </div>
   </div>
+
+  <!-- Formulaire caché : permet à Netlify de détecter le formulaire "commande" au déploiement -->
+  <form name="commande" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input name="bot-field" /><input name="reference" /><input name="client" /><input name="telephone" />
+    <input name="email" /><input name="adresse" /><input name="paiement" /><input name="total" />
+    <textarea name="articles"></textarea><textarea name="note"></textarea>
+  </form>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

@@ -103,7 +103,7 @@
           <div class="price"><strong>${money(p.price)}</strong>${p.oldPrice ? `<s>${money(p.oldPrice)}</s>` : ""}</div>
           <div class="card__actions">
             ${p.sizes
-              ? `<button class="btn btn--block" data-view="${p.id}" ${p.stock <= 0 ? "disabled" : ""}>Choisir une taille</button>`
+              ? `<button class="btn btn--block" data-view="${p.id}" ${p.stock <= 0 ? "disabled" : ""}>Choisir une option</button>`
               : `<button class="btn btn--primary btn--block" data-add="${p.id}" ${p.stock <= 0 ? "disabled" : ""}>${p.stock <= 0 ? "Épuisé" : "Ajouter au panier"}</button>`}
           </div>
         </div>
@@ -129,7 +129,7 @@
           <div class="line__thumb" style="${bg(p)}">${media(p)}</div>
           <div>
             <div class="line__name">${esc(p.name)}</div>
-            <div class="line__meta">${l.size ? `Taille ${esc(l.size)} · ` : ""}${money(p.price)}</div>
+            <div class="line__meta">${l.size ? `${esc(l.size)} · ` : ""}${money(p.price)}</div>
             <div class="qty" style="margin-top:6px">
               <button data-dec="${key}" aria-label="Retirer un">−</button>
               <span>${l.qty}</span>
@@ -172,7 +172,7 @@
         <div class="price"><strong>${money(p.price)}</strong>${p.oldPrice ? `<s>${money(p.oldPrice)}</s>` : ""}</div>
         <p>${esc(p.description)}</p>
         ${stockLabel}
-        ${p.sizes ? `<div><strong style="font-size:14px">Taille</strong><div class="sizes" style="margin-top:6px">${p.sizes.map((s) => `<button class="size" data-size="${esc(s)}">${esc(s)}</button>`).join("")}</div></div>` : ""}
+        ${p.sizes ? `<div><strong style="font-size:14px">Option</strong><div class="sizes" style="margin-top:6px">${p.sizes.map((s) => `<button class="size" data-size="${esc(s)}">${esc(s)}</button>`).join("")}</div></div>` : ""}
         <div class="pm__buy">
           <div class="qty"><button id="pmDec" aria-label="Moins">−</button><span id="pmQty">1</span><button id="pmInc" aria-label="Plus">+</button></div>
           <button class="btn btn--primary" id="pmAdd" style="flex:1" ${p.stock <= 0 ? "disabled" : ""}>${p.stock <= 0 ? "Épuisé" : "Ajouter au panier"}</button>
@@ -188,7 +188,7 @@
     $("#pmDec").onclick = () => { qty = Math.max(1, qty - 1); $("#pmQty").textContent = qty; };
     $("#pmInc").onclick = () => { qty = Math.min(Math.max(p.stock, 1), qty + 1); $("#pmQty").textContent = qty; };
     $("#pmAdd").onclick = () => {
-      if (p.sizes && !size) return toast("Veuillez choisir une taille");
+      if (p.sizes && !size) return toast("Veuillez choisir une option");
       addToCart(p.id, qty, size);
       close($("#productModal"));
     };
@@ -238,7 +238,7 @@
   function placeOrder(customer) {
     const t = totals();
     const ref = "SF-" + Date.now().toString(36).toUpperCase().slice(-6);
-    const lines = state.cart.map((l) => { const p = byId(l.id); return `- ${l.qty} × ${p.name}${l.size ? ` (taille ${l.size})` : ""} : ${money(p.price * l.qty)}`; });
+    const lines = state.cart.map((l) => { const p = byId(l.id); return `- ${l.qty} × ${p.name}${l.size ? ` (${l.size})` : ""} : ${money(p.price * l.qty)}`; });
     const message = [
       `Nouvelle commande ${SHOP_CONFIG.name} — ${ref}`, "",
       ...lines,
@@ -251,6 +251,18 @@
       customer.note ? `Note : ${customer.note}` : "",
     ].filter((x) => x !== "").join("\n");
 
+    sendToNetlify({
+      reference: ref,
+      client: `${customer.firstName} ${customer.lastName}`,
+      telephone: customer.phone,
+      email: customer.email,
+      adresse: `${customer.address}, ${customer.zip || ""} ${customer.city}`.replace(/\s+/g, " "),
+      paiement: customer.payment,
+      total: money(t.total),
+      articles: lines.join("\n"),
+      note: customer.note || "",
+    });
+
     const wa = SHOP_CONFIG.whatsapp ? `https://wa.me/${SHOP_CONFIG.whatsapp}?text=${encodeURIComponent(message)}` : "";
     const mail = `mailto:${SHOP_CONFIG.email}?subject=${encodeURIComponent(`Commande ${ref}`)}&body=${encodeURIComponent(message)}`;
 
@@ -259,7 +271,7 @@
         <div class="success__icon">🎉</div>
         <h2>Merci ${esc(customer.firstName)} !</h2>
         <p>Votre commande <strong>${ref}</strong> d'un montant de <strong>${money(t.total)}</strong> a bien été enregistrée.</p>
-        <p>Envoyez-la-nous pour que nous puissions la préparer :</p>
+        <p>Pour confirmer plus rapidement, envoyez-nous aussi le récapitulatif :</p>
         ${wa ? `<a class="btn btn--whatsapp btn--block" href="${wa}" target="_blank" rel="noopener">💬 Envoyer sur WhatsApp</a>` : ""}
         <a class="btn btn--block" href="${mail}">✉️ Envoyer par e-mail</a>
         <button class="btn btn--primary btn--block" data-close>Retour à la boutique</button>
@@ -268,6 +280,15 @@
     state.cart = [];
     saveCart();
     renderCart();
+  }
+
+  // Enregistre la commande dans Netlify Forms (visible dans le tableau de bord
+  // Netlify, avec notification par e-mail). Sans effet hors de Netlify.
+  function sendToNetlify(fields) {
+    if (!SHOP_CONFIG.netlifyForms || location.protocol === "file:") return;
+    const body = new URLSearchParams({ "form-name": "commande", ...fields }).toString();
+    fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body })
+      .catch(() => { /* la commande reste transmissible par WhatsApp ou e-mail */ });
   }
 
   // ---------- Modales / tiroir ----------

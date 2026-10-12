@@ -1,4 +1,4 @@
-# Sarafyna — Boutique en ligne
+# Sarafyna Cosmétique — Boutique en ligne
 
 Boutique en ligne en HTML, CSS et JavaScript, sans dépendances ni étape de compilation.
 
@@ -8,7 +8,7 @@ Boutique en ligne en HTML, CSS et JavaScript, sans dépendances ni étape de com
 - Fiche produit : description, stock, choix de taille et de quantité
 - Panier persistant (conservé dans le navigateur), seuil de livraison offerte
 - Formulaire de commande (paiement à la livraison, Mobile Money ou virement)
-- Envoi de la commande par **WhatsApp** et/ou **e-mail**
+- Commandes enregistrées automatiquement (Netlify Forms) + envoi par **WhatsApp** et/ou **e-mail**
 - Mise en page adaptée au mobile
 
 ## Lancer la boutique
@@ -30,6 +30,20 @@ Tout se règle dans **`products.js`** :
   dans un dossier `images/` et ajoutez `image: "images/ma-photo.jpg"` au produit.
 
 Les couleurs du site se changent en haut de `styles.css` (variables `--primary`, etc.).
+
+## Recevoir les commandes
+
+Quand un client valide sa commande :
+
+1. **Netlify Forms (automatique)** : la commande est enregistrée dans votre
+   tableau de bord Netlify (*Site → Forms → commande*). Activez la détection des
+   formulaires (*Site configuration → Forms → Enable form detection*), puis
+   redéployez. Pour être prévenu par e-mail à chaque commande :
+   *Forms → Form notifications → Add notification → Email notification*.
+   Offre gratuite : 100 commandes par mois.
+2. **WhatsApp** : renseignez `whatsapp` dans `SHOP_CONFIG`. Le client voit un
+   bouton qui ouvre WhatsApp avec le récapitulatif de sa commande déjà rédigé.
+3. **E-mail** : bouton qui ouvre la messagerie du client avec la commande pré-remplie.
 
 ## Mettre en ligne
 
